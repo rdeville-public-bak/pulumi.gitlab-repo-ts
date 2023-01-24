@@ -1,7 +1,7 @@
 // commitlint.config.js
 // emojis like "✅ ", "😂 ", ...
 const matchAnyEmojiWithSpaceAfter =
-  /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])\s/;
+  /(🎨|⚡️|🔥|🐛|🚑️|✨|📝|🚀|💄|🎉|✅|🔒️|🔐|🔖|🚨|🚧|💚|⬇️|⬆️|📌|👷|📈|♻️|➕|➖|🔧|🔨|🌐|✏️|💩|⏪️|🔀|📦️|👽️|🚚|📄|💥|🍱|♿️|💡|🍻|💬|🗃️|🔊|🔇|👥|🚸|🏗️|📱|🤡|🥚|🙈|📸|⚗️|🔍️|🏷️|🌱|🚩|🥅|💫|🗑️|🛂|🩹|🧐|⚰️|🧪|👔|🩺|🧱|🧑‍💻|💸|🧵|🦺)/s;
 const subjectThatDontStartWithBracket = /([^\[].+)/; // "Add tests" but don't allow "[ Add tests"
 
 module.exports = {
@@ -22,7 +22,10 @@ module.exports = {
         "header-match-pattern": (parsed) => {
           const { emoji, subject } = parsed;
           if (emoji === null && subject === null) {
-            return [false, "header must be in format '✅ Add tests'"];
+            return [
+              false,
+              `header must be in format '✅ Add tests', emoji:${emoji}, subject:${subject}`,
+            ];
           }
           return [true, ""];
         },
