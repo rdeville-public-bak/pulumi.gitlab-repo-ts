@@ -8,7 +8,7 @@ config:
       # Type of provider, for the moment only 'gitlab' is supported
       type: gitlab
       # Required for Gitlab provider
-      base_url: https://gitlab.com/api/v4
+      baseUrl: https://gitlab.com/api/v4
       # Token API to connect to this provider can be set with :
       #   * The 'pulumi config set' command
       #     `pulumi config set --secret --path 'gitProvider["provider_name"].token' TOKEN_API`
@@ -26,7 +26,7 @@ config:
       token: abcdefghijklmno
     another_provider_name:
       type: gitlab
-      base_url: https://another_provider.com/api/v4
+      baseUrl: https://another_provider.com/api/v4
       token:
         env: ENV_VARIABLE_NAME
   # Required, set the name of the provider you want to use as main provider

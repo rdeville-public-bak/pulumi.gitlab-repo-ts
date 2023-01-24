@@ -2,12 +2,12 @@ encryptionsalt: v1:VLOdW1ooUK0=:v1:QfZsT9kj5yH+s6eN:V65y0bIvAc4kMowkyb+dJb9zAk3u
 config:
   git-repo:gitProvider:
     framagit.org:
-      base_url: https://framagit.org/api/v4
+      baseUrl: https://framagit.org/api/v4
       type: gitlab
       token:
         cmd: cmd to get framagit token api
     gitlab.com:
-      base_url: https://gitlab.com/api/v4
+      baseUrl: https://gitlab.com/api/v4
       type: gitlab
       token:
         cmd: cmd to get gitlab token api
