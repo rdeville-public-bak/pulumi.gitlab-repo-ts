@@ -59,12 +59,13 @@ test("group with unsupported provider", (currTest) => {
     };
 
     const providers = provider.initProvider(PROVIDER);
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         fakeGroups
     );
 
-    currTest.deepEqual(groups.fakeGroupName, {});
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+    currTest.deepEqual(typeof providers[PROVIDER_NAME[2]], "undefined");
 });
 
 test("group with supported provider without group args", (currTest) => {
@@ -77,14 +78,14 @@ test("group with supported provider without group args", (currTest) => {
     };
 
     const providers = provider.initProvider(PROVIDER);
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         fakeGroups
     );
 
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[0]].group.name, "fakeGroupName"
+        providers[PROVIDER_NAME[0]].groups.fakeGroupName.group.name
     );
 });
 
@@ -104,16 +105,15 @@ test("group with supported provider with default group args", (currTest) => {
     };
 
     const providers = provider.initProvider(PROVIDER);
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         fakeGroups,
         fakeGroupConfigs
     );
 
-
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[0]].group.name, "fakeGroupName"
+        providers[PROVIDER_NAME[0]].groups.fakeGroupName.group.name
     );
 });
 
@@ -134,19 +134,19 @@ test("group with supported provider mirror groups args", (currTest) => {
     };
 
     const providers = provider.initProvider(PROVIDER);
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         fakeGroups,
         fakeGroupConfigs
     );
 
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[0]].group.name, "fakeGroupName"
+        providers[PROVIDER_NAME[0]].groups.fakeGroupName.group.name
     );
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[1]].group.name, "fakeGroupName"
+        providers[PROVIDER_NAME[1]].groups.fakeGroupName.group.name
     );
 });
 
@@ -174,21 +174,20 @@ test("group with supported provider with subgroup", (currTest) => {
     };
 
     const providers = provider.initProvider(PROVIDER);
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         fakeGroups,
         fakeGroupConfigs
     );
 
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[0]].group.name, "fakeGroupName"
+        providers[PROVIDER_NAME[0]].groups.fakeGroupName.group.name
     );
-    currTest.is(
+    currTest.snapshot(
         // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-        groups.fakeGroupName[PROVIDER_NAME[0]].
-            // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            subgroup?.fakeGroupName[PROVIDER_NAME[0]].group.name,
-        "fakeGroupName"
+        providers[PROVIDER_NAME[0]].
+            groups.fakeGroupName.
+            subgroup.fakeGroupName.group.name
     );
 });

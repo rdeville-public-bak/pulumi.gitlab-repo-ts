@@ -14,11 +14,11 @@ test("Create basic group", (currTest) => {
     const opts: pulumi.CustomResourceOptions = {
         "aliases": [{"name": FAKE_ALIAS}]
     };
-    const gitlabProvider = new gitlab.GitlabGroup(
+    const gitlabGroup = new gitlab.GitlabGroup(
         FAKE_NAME,
         args,
         opts
     );
 
-    currTest.is(gitlabProvider.name, FAKE_NAME);
+    currTest.snapshot(gitlabGroup.group.name);
 });
