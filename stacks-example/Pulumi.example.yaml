@@ -49,5 +49,5 @@ config:
       # Description of the group
       desc: My Test group description
       # List of provider where to create the group, must be among `gitProvider` key
-      provider:
+      providers:
         - provider_name.tld
