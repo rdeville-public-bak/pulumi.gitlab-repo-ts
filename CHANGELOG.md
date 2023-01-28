@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## [v0.3.1](https://github.com/rdeville-public/git-repo/compare/0.3.0...0.3.1) (2023-01-28)
+
+### Patch
+
+  * ✏️ Fix typos in stack due to group utils refacto [`7d9b7a9`](https://github.com/rdeville-public/git-repo/commit/7d9b7a9)
+
+### Others
+
+  * ♻️ Group utils refactorisation [`b7b22cf`](https://github.com/rdeville-public/git-repo/commit/b7b22cf)
+  * ✅ Update group utils tests [`15c7667`](https://github.com/rdeville-public/git-repo/commit/15c7667)
+
 ## [v0.3.0](https://github.com/rdeville-public/git-repo/compare/0.2.1...0.3.0) (2023-01-27)
 
 ### Minor
