@@ -54,14 +54,13 @@ test("group with unsupported provider", (currTest) => {
         "fakeGroupName": {
             "desc": GROUP_DESC,
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            "provider": [PROVIDER_NAME[2]]
+            "providers": [PROVIDER_NAME[2]]
         }
     };
 
     const providers = provider.initProvider(PROVIDER);
     const groups = group.initGroup(
         providers,
-        {},
         fakeGroups
     );
 
@@ -73,14 +72,13 @@ test("group with supported provider without group args", (currTest) => {
         "fakeGroupName": {
             "desc": GROUP_DESC,
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            "provider": [PROVIDER_NAME[0]]
+            "providers": [PROVIDER_NAME[0]]
         }
     };
 
     const providers = provider.initProvider(PROVIDER);
     const groups = group.initGroup(
         providers,
-        {},
         fakeGroups
     );
 
@@ -95,7 +93,7 @@ test("group with supported provider with default group args", (currTest) => {
         "fakeGroupName": {
             "desc": GROUP_DESC,
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            "provider": [PROVIDER_NAME[0]]
+            "providers": [PROVIDER_NAME[0]]
         }
     };
 
@@ -108,8 +106,8 @@ test("group with supported provider with default group args", (currTest) => {
     const providers = provider.initProvider(PROVIDER);
     const groups = group.initGroup(
         providers,
-        fakeGroupConfigs,
-        fakeGroups
+        fakeGroups,
+        fakeGroupConfigs
     );
 
 
@@ -124,7 +122,7 @@ test("group with supported provider mirror groups args", (currTest) => {
         "fakeGroupName": {
             "desc": GROUP_DESC,
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            "provider": [PROVIDER_NAME[0], PROVIDER_NAME[1]]
+            "providers": [PROVIDER_NAME[0], PROVIDER_NAME[1]]
         }
     };
 
@@ -138,8 +136,8 @@ test("group with supported provider mirror groups args", (currTest) => {
     const providers = provider.initProvider(PROVIDER);
     const groups = group.initGroup(
         providers,
-        fakeGroupConfigs,
-        fakeGroups
+        fakeGroups,
+        fakeGroupConfigs
     );
 
     currTest.is(
@@ -160,11 +158,11 @@ test("group with supported provider with subgroup", (currTest) => {
             "groups": {
                 "fakeGroupName": {
                     "desc": GROUP_DESC,
-                    "provider": []
+                    "providers": []
                 }
             },
             // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-            "provider": [PROVIDER_NAME[0]]
+            "providers": [PROVIDER_NAME[0]]
         }
     };
 
@@ -178,8 +176,8 @@ test("group with supported provider with subgroup", (currTest) => {
     const providers = provider.initProvider(PROVIDER);
     const groups = group.initGroup(
         providers,
-        fakeGroupConfigs,
-        fakeGroups
+        fakeGroups,
+        fakeGroupConfigs
     );
 
     currTest.is(
