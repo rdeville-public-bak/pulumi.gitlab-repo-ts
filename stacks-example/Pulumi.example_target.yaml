@@ -330,7 +330,7 @@ config:
     my_group:
       desc: My group desctipn
       logo: ./img/namespace/my_group_logo.png
-      provider:
+      providers:
         - framagit.org
         - gitlab.com # will be a mirror of group at framagit.org
         - github.com # will be a mirror of group at framagit.org

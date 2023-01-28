@@ -30,5 +30,5 @@ config:
   git-repo:groups:
     my_group:
       desc: My Test group description
-      provider:
+      providers:
         - provider_name.tld
