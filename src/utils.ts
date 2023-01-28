@@ -4,6 +4,41 @@ import {spawnSync} from "child_process";
 
 type ProtectedData = string | {[key: string]: string};
 
+export const ID_SIZE = 5;
+const INCREMENT = 1;
+
+/**
+ * Generate a random string with length specified as arguments
+ *
+ * @param {number} length - Size of the string
+ * @returns {string} Random string
+ */
+export function genId (length: number = ID_SIZE): string {
+    let result = "";
+    const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const charactersLength = characters.length;
+    for (let idx = 0; idx < length; idx += INCREMENT) {
+        result += characters.charAt(
+            Math.floor(Math.random() * charactersLength)
+        );
+    }
+    return result;
+}
+
+/**
+ * Return a slugify version of a string
+ *
+ * @param {string} str - String to slugify
+ * @returns {string} Slugified string
+ */
+export function slugify (str: string): string {
+    return str.
+        replace(/ /ugi, "-").
+        replace(/---/ugi, "-").
+        toLowerCase();
+}
+
 /**
  * Compute a value from a command provided.
  *

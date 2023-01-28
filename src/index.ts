@@ -2,7 +2,6 @@ import * as group from "./group";
 import * as provider from "./provider";
 import * as pulumi from "@pulumi/pulumi";
 import type {
-    GroupsDict,
     GroupsPulumiConfig,
     GroupsPulumiInfo
 } from "./group";
@@ -11,33 +10,25 @@ import type {
     ProvidersPulumiConfig
 } from "./provider/types";
 
-interface Output {
-    groups: GroupsDict;
-    providers: ProvidersDict;
-}
-
 /**
  * Function to deploy of every resources.
  *
  * @returns {Output} Output of pulumi deployed resources
  */
-function deploy (): Output {
+function deploy (): ProvidersDict {
     const config: pulumi.Config = new pulumi.Config();
 
     const providers = provider.initProvider(
         config.requireObject<ProvidersPulumiConfig>("gitProvider")
     );
 
-    const groups = group.initGroup(
+    group.initGroup(
         providers,
         config.requireObject<GroupsPulumiInfo>("groups"),
         config.getObject<GroupsPulumiConfig>("groupConfigs")
     );
 
-    return {
-        groups,
-        providers
-    };
+    return providers;
 }
 
 /**
@@ -45,7 +36,7 @@ function deploy (): Output {
  *
  * @returns {Output} Output of pulumi deployed resources
  */
-function main (): Output {
+function main (): ProvidersDict {
     return deploy();
 }
 

@@ -1,9 +1,11 @@
 import * as gitlab from "@pulumi/gitlab";
+import type * as group from "../group";
 import * as pulumi from "@pulumi/pulumi";
 
 export interface IGitlabProvider {
     name: string;
     provider: gitlab.Provider;
+    groups: group.GroupsDict;
 }
 
 
@@ -22,6 +24,8 @@ export class GitlabProvider extends pulumi.ComponentResource
     public name = "";
 
     public provider: gitlab.Provider;
+
+    public groups: group.GroupsDict = {};
 
     /**
      * Constructor of the ComponentResource GitlabProvider

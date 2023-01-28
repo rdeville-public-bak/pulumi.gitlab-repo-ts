@@ -1,20 +1,20 @@
 import * as gitlab from "@pulumi/gitlab";
 import * as pulumi from "@pulumi/pulumi";
 import type {
-    GitlabProvider
-} from "../provider";
-import type {
     GroupArgs
 } from "./types";
 
 export interface IGitlabGroupArgs {
     groupConfig: GroupArgs;
-    provider?: GitlabProvider | undefined;
 }
+
+export interface IGitlabSubGroup {
+    [key: string]: GitlabGroup;
+}
+
 export interface IGitlabGroup {
-    name: string;
-    provider: GitlabProvider | undefined;
     group: gitlab.Group;
+    subgroup: IGitlabSubGroup;
     /*
      * accessTokens: gitlab.GroupAccessToken[];
      * badges: gitlab.GroupBadge[];
@@ -35,11 +35,9 @@ export interface IGitlabGroup {
 export class GitlabGroup extends pulumi.ComponentResource
     implements IGitlabGroup {
 
-    public name: string;
-
-    public provider: GitlabProvider | undefined;
-
     public group: gitlab.Group;
+
+    public subgroup: IGitlabSubGroup = {};
 
     /*
      * public accessTokens: gitlab.GroupAccessToken[] = [];
@@ -63,10 +61,6 @@ export class GitlabGroup extends pulumi.ComponentResource
         opts?: pulumi.ComponentResourceOptions
     ) {
         super("git-repo:gitlab-group", name, args, opts);
-        this.name = name;
-        if (args.provider) {
-            this.provider = args.provider;
-        }
         this.group = new gitlab.Group(
             name,
             args.groupConfig,

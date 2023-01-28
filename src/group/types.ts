@@ -10,7 +10,7 @@ export interface GroupData {
 
 export interface GroupInfo {
     desc: string;
-    providers: string[];
+    providers?: string[];
     logo?: string;
     groups?: GroupsPulumiInfo;
 }
@@ -20,7 +20,7 @@ export interface GroupsPulumiInfo {
 }
 
 export interface GroupsDict {
-    [key: string]: GroupsOutput;
+    [key: string]: GroupSupportedObject;
 }
 
 export interface GroupPulumiConfig {
@@ -29,15 +29,6 @@ export interface GroupPulumiConfig {
 
 export interface GroupsPulumiConfig {
     [key: string]: GroupPulumiConfig;
-}
-
-export interface GroupOutput {
-    "group": GroupSupportedObject;
-    "subgroup": GroupsDict | undefined;
-}
-
-export interface GroupsOutput {
-    [key: string]: GroupOutput;
 }
 
 // Type
