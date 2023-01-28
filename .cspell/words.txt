@@ -11,4 +11,5 @@ Pulumi
 rdeville
 Romain
 subkey
+Slugified
 WRONGTOKEN
