@@ -30,8 +30,8 @@ function deploy (): Output {
 
     const groups = group.initGroup(
         providers,
-        config.requireObject<GroupsPulumiConfig>("groupConfigs"),
-        config.requireObject<GroupsPulumiInfo>("groups")
+        config.requireObject<GroupsPulumiInfo>("groups"),
+        config.getObject<GroupsPulumiConfig>("groupConfigs")
     );
 
     return {

@@ -2,11 +2,6 @@ import * as group from "../group";
 import * as log from "../log";
 import * as pulumi from "@pulumi/pulumi";
 import type {
-    GitlabProvider,
-    ProviderSupportedObject,
-    ProvidersDict
-} from "../provider";
-import type {
     GroupArgs,
     GroupData,
     GroupInfo,
@@ -18,6 +13,10 @@ import type {
     GroupsPulumiConfig,
     GroupsPulumiInfo
 } from "./types";
+import type {
+    ProviderSupportedObject,
+    ProvidersDict
+} from "../provider";
 
 /**
  * Compute group configuration depending on the type of group
@@ -31,43 +30,48 @@ import type {
 function computeGroupConfig (
     providerName: string,
     providerType: string,
-    groupsConfig: GroupsPulumiConfig,
+    groupsConfig?: GroupsPulumiConfig,
     groupType = "default"
 ): GroupArgs {
-    const config: pulumi.Config = new pulumi.Config();
+    if (groupsConfig) {
+        const config: pulumi.Config = new pulumi.Config();
 
-    const providerGroupConfigs: GroupPulumiConfig = groupsConfig[providerType];
+        const providerGroupConfigs: GroupPulumiConfig =
+            groupsConfig[providerType];
 
-    if (
-        typeof providerGroupConfigs !== "undefined" &&
-        "default" in providerGroupConfigs
-    ) {
-        if (providerName === config.require("mainProvider")) {
-            return providerGroupConfigs.default as GroupArgs;
+        if (
+            typeof providerGroupConfigs !== "undefined" &&
+            "default" in providerGroupConfigs
+        ) {
+            if (providerName === config.require("mainProvider")) {
+                return providerGroupConfigs.default as GroupArgs;
+            }
+            return {
+                ...providerGroupConfigs.default,
+                ...providerGroupConfigs[groupType]
+            } as GroupArgs;
         }
-        return {
-            ...providerGroupConfigs.default,
-            ...providerGroupConfigs[groupType]
-        } as GroupArgs;
     }
+
     return {} as GroupArgs;
 }
+
 
 /**
  * [TODO:description]
  *
- * @param {GitlabProvider} provider - [TODO:description]
- * @param {GroupsPulumiConfig} groupsConfig - [TODO:description]
+ * @param {ProviderSupportedObject} provider - [TODO:description]
  * @param {GroupInfo} groupInfo - [TODO:description]
  * @param {string} groupName - [TODO:description]
+ * @param {GroupsPulumiConfig} [groupsConfig] - [TODO:description]
  * @param {GroupSupportedObject} [parentGroup] - [TODO:description]
  * @returns {GroupData} [TODO:description]
  */
 function computeGroupData (
-    provider: GitlabProvider,
-    groupsConfig: GroupsPulumiConfig,
+    provider: ProviderSupportedObject,
     groupInfo: GroupInfo,
     groupName: string,
+    groupsConfig?: GroupsPulumiConfig,
     parentGroup?: GroupSupportedObject
 ): GroupData {
     let data: GroupArgs = {
@@ -112,8 +116,8 @@ function computeGroupData (
  * @param {ProviderSupportedObject} provider - [TODO:description]
  * @param {string} groupName - [TODO:description]
  * @param {GroupInfo} groupInfo - [TODO:description]
- * @param {GroupsPulumiConfig} groupsConfig - [TODO:description]
  * @param {ProvidersDict} providers - [TODO:description]
+ * @param {GroupsPulumiConfig} [groupsConfig] - [TODO:description]
  * @param {GroupSupportedObject} [parentGroup] - [TODO:description]
  * @returns {GroupOutput} [TODO:description]
  */
@@ -121,12 +125,12 @@ function createGroup (
     provider: ProviderSupportedObject,
     groupName: string,
     groupInfo: GroupInfo,
-    groupsConfig: GroupsPulumiConfig,
     providers: ProvidersDict,
+    groupsConfig?: GroupsPulumiConfig,
     parentGroup?: GroupSupportedObject
 ): GroupOutput {
     const data = computeGroupData(
-        provider, groupsConfig, groupInfo, groupName, parentGroup
+        provider, groupInfo, groupName, groupsConfig, parentGroup
     );
     const currGroup = group.groupFactory(
         provider.providerType, groupName, data
@@ -136,7 +140,7 @@ function createGroup (
         "group": currGroup,
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         "subgroup": initGroup(
-            providers, groupsConfig, groupInfo.groups, currGroup
+            providers, groupInfo.groups, groupsConfig, currGroup
         )
     };
 }
@@ -146,16 +150,16 @@ function createGroup (
  *
  * @param {string} groupName - Name of the group
  * @param {GroupInfo} groupInfo - Information of the group (such as desc, etc.)
- * @param {GroupsPulumiConfig} groupsConfig - groupConfigs set in the stack
  * @param {ProvidersDict} providers - Set of providers
+ * @param {GroupsPulumiConfig} groupsConfig - groupConfigs set in the stack
  * @param {GroupSupportedObject} [parentGroup] - Group object to define subgroup
  * @returns {GroupSupportedObject[]} List of groups deployed
  */
 function processGroups (
     groupName: string,
     groupInfo: GroupInfo,
-    groupsConfig: GroupsPulumiConfig,
     providers: ProvidersDict,
+    groupsConfig?: GroupsPulumiConfig,
     parentGroup?: GroupSupportedObject
 ): GroupsOutput {
     const groups: GroupsOutput = {};
@@ -164,19 +168,19 @@ function processGroups (
             parentGroup.provider,
             groupName,
             groupInfo,
-            groupsConfig,
             providers,
+            groupsConfig,
             parentGroup
         );
     } else {
-        for (const iProvider of groupInfo.provider) {
+        for (const iProvider of groupInfo.providers) {
             if (iProvider in providers) {
                 groups[iProvider] = createGroup(
                     providers[iProvider],
                     groupName,
                     groupInfo,
-                    groupsConfig,
-                    providers
+                    providers,
+                    groupsConfig
                 );
             } else {
                 log.warn(
@@ -192,27 +196,32 @@ function processGroups (
  * Initialize the processing of each groups defined in the stack
  *
  * @param {ProvidersDict} providers - Set of providers
+ * @param {GroupsPulumiInfo | undefined} groupsInfo - groups entry set in the
+ *      stack
  * @param {GroupsPulumiConfig} groupsConfig - groupConfigs set in the stack
- * @param {GroupsPulumiInfo} groupsInfo - groups entry set in the stack
  * @param {GroupSupportedObject} parentGroup - Group parent if group is a
  *      subgroup
  * @returns {GroupsDict} Set of groups deployed
  */
 export function initGroup (
     providers: ProvidersDict,
-    groupsConfig: GroupsPulumiConfig,
-    groupsInfo?: GroupsPulumiInfo,
+    groupsInfo: GroupsPulumiInfo | undefined,
+    groupsConfig?: GroupsPulumiConfig,
     parentGroup?: GroupSupportedObject
 ): GroupsDict {
     const groups: GroupsDict = {};
+
+    if (!groupsInfo) {
+        return groups;
+    }
 
     for (const iGroup in groupsInfo) {
         if (groupsInfo[iGroup].desc) {
             groups[iGroup] = processGroups(
                 iGroup,
                 groupsInfo[iGroup],
-                groupsConfig,
                 providers,
+                groupsConfig,
                 parentGroup
             );
         }

@@ -10,7 +10,7 @@ export interface GroupData {
 
 export interface GroupInfo {
     desc: string;
-    provider: string[];
+    providers: string[];
     logo?: string;
     groups?: GroupsPulumiInfo;
 }
